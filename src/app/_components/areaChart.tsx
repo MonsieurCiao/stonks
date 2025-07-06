@@ -1,50 +1,31 @@
 "use client";
 import React, { useEffect, useMemo, useRef } from "react";
+import {
+  AreaChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Legend,
+  ResponsiveContainer,
+  Area,
+} from "recharts";
+const data = [
+  { name: "17.30", uv: 400, pv: 2400, amt: 2400 },
+  { name: "18.30", uv: 300, pv: 2400, amt: 2400 },
+  { name: "19.30", uv: 500, pv: 2400, amt: 2400 },
+  { name: "20.30", uv: 200, pv: 2400, amt: 2400 },
+  { name: "21.30", uv: 100, pv: 2400, amt: 2400 },
+];
 
-export default function AreaChart() {
-  const areaChart = useRef<HTMLDivElement | null>(null);
-
-  const draw = useMemo(
-    () => () => {
-      const data = google.visualization.arrayToDataTable([
-        ["Year", "Sales", "Expenses"],
-        ["2013", 1000, 400],
-        ["2014", 1170, 460],
-        ["2015", 660, 1120],
-        ["2016", 1030, 540],
-      ]);
-      const options = {
-        title: "Company Performance",
-        hAxis: { title: "Year", titleTextStyle: { color: "#333" } },
-        vAxis: { minValue: 0 },
-      };
-
-      const chart = new google.visualization.AreaChart(
-        areaChart.current as HTMLElement
-      );
-      chart.draw(data, options);
-    },
-    []
-  );
-
-  useEffect(() => {
-    const loadChart = async () => {
-      if (typeof google === "undefined") {
-        await new Promise<void>((resolve) => {
-          const script = document.createElement("script");
-          script.src = "https://www.gstatic.com/charts/loader.js";
-          script.onload = () => resolve();
-          document.head.appendChild(script);
-        });
-      }
-      google.charts.load("current", { packages: ["corechart"] });
-      google.charts.setOnLoadCallback(draw);
-    };
-    loadChart();
-  }, []);
+export default function StockChart() {
   return (
-    <section>
-      <div ref={areaChart}></div>
-    </section>
+    <AreaChart width={600} height={300} data={data}>
+      <CartesianGrid />
+      <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Legend />
+    </AreaChart>
   );
 }
